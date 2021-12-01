@@ -12,47 +12,35 @@
 </head>
 <body>
 <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top" th:replace="fragments/common :: menu('board')">
-    <!-- <a class="navbar-brand" href="#">Navbar</a>
-     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-         <span class="navbar-toggler-icon"></span>
-     </button>
 
-     <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-         <ul class="navbar-nav mr-auto">
-             <li class="nav-item active">
-                 <a class="nav-link" href="#">Home </a>
-             </li>
-             <li class="nav-item">
-                 <a class="nav-link" href="#">Board</a>
-             </li>
-
-         </ul>
-
-     </div>-->
 </nav>
 
 <div class="container">
     <h2>Spring Board</h2>
-    <div>TOTAL : <span th:text="${#lists.size(boards)}"></span></div>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">NUM</th>
-                <th scope="col">TITLE</th>
-                <th scope="col">WRITER</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="board : ${boards}">
-                <td th:text="${board.id}"></td>
-                <td><a th:text="${board.title}" th:href="@{/board/form(id=${board.id})}"></a></td>
-                <td>홍길동</td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="text-end">
-    <a type="button" class="btn btn-primary" th:href="@{/board/form}">REGISTER</a>
-    </div>
+    <form action="#" th:action="@{/board/form}" th:object="${board}" method="post">
+        <input type="hidden" th:field="*{id}">
+        <div class="mb-3">
+            <label for="TITLE" class="form-label">TITLE</label>
+            <input type="text" class="form-control"
+                   th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'" id="TITLE" th:field="*{title}">
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">
+                title error
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="content" class="form-label">CONTENT</label>
+            <textarea class="form-control" id="content"
+                      th:classappend="${#fields.hasErrors('content')} ? 'is-invalid'" rows="3" th:field="*{content}"></textarea>
+            <div class="invalid-feedback" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">
+                title error
+            </div>
+        </div>
+
+        <div class="text-end">
+            <a type="button" class="btn btn-primary" th:href="@{/board/list}">CANCEL</a>
+            <button type="submit" class="btn btn-primary">REGISTER</button>
+        </div>
+    </form>
 </div>
 
 <!-- Optional JavaScript; choose one of the two! -->
