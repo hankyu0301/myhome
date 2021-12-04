@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head th:fragment="head(title)">
     <!-- Required meta tags -->
@@ -8,7 +8,7 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-    <link href="starter-template.css" th:href="@{/starter-template.css}" rel="stylesheet">
+    <link href="starter-template.css" th:href="@{/css/starter-template.css}" rel="stylesheet">
     <title th:text="${title}">Hello, Spring Boot!</title>
 </head>
 
@@ -39,11 +39,18 @@
                  </div>
              </li> -->
         </ul>
-        <!-- <form class="form-inline my-2 my-lg-0">
-             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-             <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-         </form>-->
+
     </div>
+    <a class="btn btn-secondary my-2 my-sm-0 mx-2" th:href="@{/account/login}"
+       sec:authorize="!isAuthenticated()">Login</a>
+    <a class="btn btn-secondary my-2 my-sm-0" th:href="@{/account/register}"
+       sec:authorize="!isAuthenticated()">CREATE ACCOUNT</a>
+    <!--logout 작동 X.. -> th:href="@{/logout}"을 th:action...으로 바꿈.. -->
+    <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">
+        <span class="text-white" sec:authentication="name">USER</span>
+        <span class="text-white mx-2" sec:authentication="principal.authorities">ROLE</span>
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Logout</button>
+    </form>
 </nav>
 </body>
 </html>
