@@ -1,7 +1,10 @@
 package org.hankyu.myhome.controller;
 
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import lombok.extern.slf4j.Slf4j;
 import org.hankyu.myhome.model.Board;
+import org.hankyu.myhome.model.QUser;
 import org.hankyu.myhome.model.User;
 import org.hankyu.myhome.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +25,30 @@ class UserApiController {
     // Aggregate root
     // tag::get-aggregate-root[]
     @GetMapping("/users")
-    List<User> all() {
-        List<User> users = repository.findAll();
-        log.debug("getBoards().size 호출전");
-        log.debug("getBoards().size : {}", users.get(0).getBoards().size());
-        log.debug("getBoards().size 호출후");
+    Iterable<User> all(@RequestParam(required = false) String method,@RequestParam(required = false) String text) {
+        Iterable<User> users = null;
+        if("query".equals(method)) {
+            users = repository.findByUsernameQuery(text);
+        } else if ("nativeQuery".equals(method)) {
+            users = repository.findByUsernameNativeQuery(text);
+        } else if("querydsl".equals(method)) {
+            QUser user = QUser.user;
+            Predicate predicate = user.username.contains(text);
+           /* BooleanExpression b = user.username.contains(text);
+            if(true) {
+                b = b.and(user.username.eq("hankyu"));
+            }*/
+            users = repository.findAll(predicate);
+         //   Predicate predicate = users;
+        } else if("queryDslCustom".equals(method)) {
+            users = repository.findByUsernameCustom(text);
+        } else if("jdbc".equals(method)) {
+            users = repository.findByUsernameJDBC(text);
+        } else {
+            users = repository.findAll();
+        }
         return users;
+
     }
     // end::get-aggregate-root[]
 
