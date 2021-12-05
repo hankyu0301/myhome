@@ -1,5 +1,6 @@
 package org.hankyu.myhome.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.hankyu.myhome.model.Board;
 import org.hankyu.myhome.model.User;
 import org.hankyu.myhome.repository.UserRepository;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+@Slf4j
 class UserApiController {
 
     @Autowired
@@ -21,7 +23,11 @@ class UserApiController {
     // tag::get-aggregate-root[]
     @GetMapping("/users")
     List<User> all() {
-        return repository.findAll();
+        List<User> users = repository.findAll();
+        log.debug("getBoards().size 호출전");
+        log.debug("getBoards().size : {}", users.get(0).getBoards().size());
+        log.debug("getBoards().size 호출후");
+        return users;
     }
     // end::get-aggregate-root[]
 
